@@ -1,4 +1,4 @@
-import { AppBar, Box, CssBaseline, Grid, IconButton, Link, makeStyles, Menu, MenuItem, Tab, Tabs, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Avatar, Box, CssBaseline, Grid, IconButton, Link, makeStyles, Menu, MenuItem, Tab, Tabs, Toolbar, Typography } from '@material-ui/core'
 import React, { useEffect } from 'react'
 import { useSelector,useDispatch } from 'react-redux'
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
@@ -38,7 +38,7 @@ export default function HomeComponent() {
     sessionStorage.setItem('hotelList',JSON.stringify(HotelData) )
     
     useEffect(()=>{
-      if(sessionStorage.getItem('hotelList')!=='undefined')
+      if(sessionStorage.getItem('hotelList'))
 
       dispatch(StoreHotelList(JSON.parse(sessionStorage.getItem('hotelList'))))
 
@@ -48,6 +48,7 @@ export default function HomeComponent() {
     
   <div>
     <MenuComponent/>
+   
     <Grid>
     <Switch>
 

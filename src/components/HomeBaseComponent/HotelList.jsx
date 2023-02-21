@@ -4,10 +4,8 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   FormControl,
-  FormHelperText,
   Grid,
   InputLabel,
   List,
@@ -18,7 +16,6 @@ import {
   Select,
   Snackbar,
   TextField,
-  Typography,
 } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
@@ -81,7 +78,7 @@ export default function HotelList() {
   const [isAdded, setIsAdded] = useState(false);
   const [toastData,setToastData]=useState('')
 
-  const userType = sessionStorage.getItem('userType')
+  const userType =JSON.parse(sessionStorage.getItem('userType'))
   const hotelList = useSelector((state) => state.user.list);
   console.log("hotelList", hotelList);
   const deleteStyle = {
@@ -90,7 +87,6 @@ export default function HotelList() {
   };
 
   useEffect(() => {
-    console.log("hotelList", hotelList);
     setData(hotelList);
   }, [hotelList]);
 
@@ -157,7 +153,7 @@ export default function HotelList() {
     <Grid>
       <Grid>
         <h1>Hotel List</h1>
-        {userType && userType === "Admin" ? (
+        {userType && userType.userType === "Admin" ? (
           <Button
             size="small"
             color="primary"
@@ -215,7 +211,7 @@ export default function HotelList() {
                   </ListItem>
 
                   {/* <ListItemText className={classes.listItem}>{item.Location}</ListItemText> */}
-                  {userType && userType === "Admin" ? (
+                  {userType && userType.userType === "Admin" ? (
                     <ListItem style={{ width: "20px" }}>
                       <ListItemText style={deleteStyle}>
                         <Delete

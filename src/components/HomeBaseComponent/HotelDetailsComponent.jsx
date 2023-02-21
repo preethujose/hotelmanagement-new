@@ -1,5 +1,4 @@
 import {
- 
   Button,
   Card,
   CardActions,
@@ -15,20 +14,19 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { StoreBookingDetails } from "../store/Actions/action";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "600px",
-    border: '1px solid #ee82ea',
-    background: '#ebefef'
+    border: "1px solid #ee82ea",
+    background: "#ebefef",
   },
-  head:{
-    fontSize:'24px',
-    color:'#b533b5'
+  head: {
+    fontSize: "24px",
+    color: "#b533b5",
   },
   listItem: {
     color: "#b600ff",
@@ -54,64 +52,88 @@ export default function HotelDetailsComponent() {
   const [showDialog, setShowDialog] = useState(false);
   const [bookingDetails, setBookingDetails] = useState([]);
   const [bookingData, setBookingData] = useState({});
-  const[toastMsg,setToastmsg]=useState('')
-  const[showToast,setShowToast]=useState(false)
-  const [list,setList]=useState(sessionStorage.getItem('bookingDetails')?JSON.parse(sessionStorage.getItem('bookingDetails')):[])
-  const dispatch=useDispatch()
+  const [toastMsg, setToastmsg] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [days, setDays] = useState(null);
+  const [totalAmt, setTotalAmt] = useState(null);
+  const [list, setList] = useState(
+    sessionStorage.getItem("bookingDetails")
+      ? JSON.parse(sessionStorage.getItem("bookingDetails"))
+      : []
+  );
+  const dispatch = useDispatch();
   const flexContainer = {
     display: "flex",
     flexDirection: "row",
     padding: 0,
   };
+  const user = JSON.parse(sessionStorage.getItem("userType"));
 
   useEffect(() => {
     let list = hotelInfo.list;
     let filteredList = list.filter((item) => item.code === hotelInfo.hotelId);
     setSelectedHotel(filteredList[0]);
-    console.log("filteredList", filteredList);
   }, [hotelInfo]);
 
-  function handleChange(event) {
-    let dateFrom = "";
-    let dateTo = "";
+  useEffect(() => {
+    if (bookingData.checkinDate && bookingData.checkoutDate) {
+      let date1 = bookingData.checkinDate.split("T")[0];
+      let date2 = bookingData.checkoutDate.split("T")[0];
+      let days = getNumberOfDays(date1, date2);
+      setDays(days);
+     
+    }
+  }, [bookingData]);
 
+  useEffect(()=>{
+    let total = days * selectedhotel?.amount*bookingData.number;
+    setTotalAmt(total);
+  },[days,bookingData])
+
+  function handleChange(event) {
     setBookingData((bookingData) => ({
       ...bookingData,
       [event.target.name]: event.target.value,
     }));
-    if (event.target.name === "checkinDate") {
-      dateFrom =event.target.value.split("T")[0];
-      console.log("dateFrom", dateFrom);
-    }
-    if (event.target.name === "checkoutDate") {
-      dateTo = event.target.value.split('T');
-    }
-    let date_1 = Date.parse(dateFrom);
-    let date_2 = Date.parse(dateTo);
-    const startDate = moment(date_1);
-    const timeEnd = moment(date_2);
-    const diff = timeEnd.diff(startDate);
-    const diffDuration = moment.duration(diff);
-    console.log("days", diffDuration.days());
   }
+
+  function getNumberOfDays(start, end) {
+    const date1 = new Date(start);
+    const date2 = new Date(end);
+
+    // One day in milliseconds
+    const oneDay = 1000 * 60 * 60 * 24;
+
+    // Calculating the time difference between two dates
+    const diffInTime = date2.getTime() - date1.getTime();
+
+    // Calculating the no. of days between two dates
+    const diffInDays = Math.round(diffInTime / oneDay);
+
+    return diffInDays;
+  }
+
 
   function onClickBook() {
     setShowDialog(true);
   }
 
-  function onSubmitBooking(){
-    console.log('bookingListbookingList',list)
-    let bookedData={...bookingData,['hotelCode']:selectedhotel.code}
-    let bookingList=[...list]
-    bookingList.push(bookedData)
-    console.log('bookedData',bookingList)
-    dispatch(StoreBookingDetails(bookingList))
-    sessionStorage.setItem('bookingDetails',JSON.stringify(bookingList))
-    setToastmsg('Booking completed successfully')
-    setShowToast(true)
-    setShowDialog(false)
+  function onSubmitBooking() {
+    let bookedData = {
+      ...bookingData,
+      ["hotelCode"]: selectedhotel.code,
+      ["hotelName"]: selectedhotel.name,
+      ["userName"]: user.userName,
+      ['total']:totalAmt
+    };
+    let bookingList = [...list];
+    bookingList.push(bookedData);
+    dispatch(StoreBookingDetails(bookingList));
+    sessionStorage.setItem("bookingDetails", JSON.stringify(bookingList));
+    setToastmsg("Booking completed successfully");
+    setShowToast(true);
+    setShowDialog(false);
   }
-  console.log("bookingData", bookingData);
   return (
     <Grid direction="column" justifyContent="center" alignItems="center">
       <h1>Hotel Details</h1>
@@ -127,11 +149,6 @@ export default function HotelDetailsComponent() {
               6,000 species, ranging across all continents except Antarctica
             </Typography>
             <Typography variant="h6">Phone:{selectedhotel?.contact}</Typography>
-            {/* <List style={flexContainer} className={classes.listItem}>
-            {
-                selectedhotel?.facilities.map((item)=>{return <ListItem>{item}</ListItem>})
-            }
-            </List> */}
             <Chip
               className={classes.chip}
               label={`${selectedhotel?.amount}/day`}
@@ -154,8 +171,6 @@ export default function HotelDetailsComponent() {
       <Dialog
         className={classes.dialog}
         open={showDialog}
-        // onClose={handleClose}
-        // PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
       >
         <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
@@ -221,28 +236,27 @@ export default function HotelDetailsComponent() {
               name="checkoutDate"
             />
             <br />
-            <TextField
-              className={classes.TextField}
-              type="number"
-              label="Number of Days"
-              // variant="outlined"
-              name="days"
-              disabled
-              value="2"
-              onChange={handleChange}
-            />
-            <br />
+            {days ? (
+              <TextField
+                className={classes.TextField}
+                type="number"
+                label="Number of Days"
+                // variant="outlined"
+                name="days"
+                disabled
+                value="2"
+                onChange={handleChange}
+              />
+            ) : null}
 
             <Typography>Total Amount</Typography>
-
-            <Chip
-              className={classes.chip}
-              label={`${selectedhotel?.amount}`}
-              size="large"
-            />
-            {/* <Button variant="contained" color="primary">
-              save
-            </Button> */}
+            {totalAmt ? (
+              <Chip
+                className={classes.chip}
+                label={`${totalAmt}`}
+                size="large"
+              />
+            ) : null}
           </form>
         </DialogContent>
         <DialogActions>
@@ -261,7 +275,7 @@ export default function HotelDetailsComponent() {
       <Snackbar
         severity="success"
         open={showToast}
-        onClose={()=>setShowToast(false)}
+        onClose={() => setShowToast(false)}
         message={toastMsg}
         autoHideDuration={1000}
       />

@@ -88,7 +88,7 @@ const LoginPage = (props) => {
     }
     else {
       dispatch(StoreUserDetails(userDetails));
-      sessionStorage.setItem('userType',userDetails.userType)
+      sessionStorage.setItem('userType',JSON.stringify(userDetails))
       props.history.push("/home/list");
     }
   }
