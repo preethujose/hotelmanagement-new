@@ -31,8 +31,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 export default function HomeComponent() {
 
-    const user = useSelector((state) => state.user.userDetails)
-    console.log('user',user)
+    // const user = useSelector((state) => state.user.userDetails)
     const dispatch=useDispatch()
 
     sessionStorage.setItem('hotelList',JSON.stringify(HotelData) )

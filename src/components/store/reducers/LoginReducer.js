@@ -17,9 +17,7 @@ const user = (state = intialState, action) => {
     else if (action.type === STORE_HOTEL_LIST) {
         return Object.assign({}, state, { list: action.payload });
     }
-    else if (action.type === STORE_BOOKING_DETAILS) {
-        return Object.assign({}, state, { bookinglist: action.payload });
-    }
+   
     else
     return state;
 }

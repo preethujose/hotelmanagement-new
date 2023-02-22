@@ -16,7 +16,6 @@ import {
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { StoreBookingDetails } from "../store/Actions/action";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +41,13 @@ const useStyles = makeStyles((theme) => ({
   dialog: {
     minWidth: "500px",
   },
+  h1:{
+    color:'#e916e9'
+  },
+  date:{
+    margin: theme.spacing(1),
+    minWidth: 200,
+  }
 }));
 
 export default function HotelDetailsComponent() {
@@ -128,7 +134,6 @@ export default function HotelDetailsComponent() {
     };
     let bookingList = [...list];
     bookingList.push(bookedData);
-    dispatch(StoreBookingDetails(bookingList));
     sessionStorage.setItem("bookingDetails", JSON.stringify(bookingList));
     setToastmsg("Booking completed successfully");
     setShowToast(true);
@@ -136,7 +141,7 @@ export default function HotelDetailsComponent() {
   }
   return (
     <Grid direction="column" justifyContent="center" alignItems="center">
-      <h1>Hotel Details</h1>
+      <h1 className={classes.h1}>Hotel Details</h1>
       <Grid container xs={12} justifyContent="center" alignItems="center">
         <Card className={classes.root}>
           <CardContent>
@@ -156,7 +161,7 @@ export default function HotelDetailsComponent() {
             />
           </CardContent>
           {/* </CardActionArea> */}
-          <CardActions>
+          <CardActions style={{display:'flex',justifyContent:'center'}}>
             <Button
               size="small"
               color="primary"
@@ -173,7 +178,7 @@ export default function HotelDetailsComponent() {
         open={showDialog}
         aria-labelledby="draggable-dialog-title"
       >
-        <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
+        <DialogTitle style={{ cursor: "move" ,backgroundColor:'#3f51b5',color:'white'}} >
           Booking Details
         </DialogTitle>
         <DialogContent className={classes.dialog}>
@@ -196,6 +201,7 @@ export default function HotelDetailsComponent() {
               variant="outlined"
               multiline
               name="address"
+              rows={2}
               onChange={handleChange}
             />
             <br />
@@ -215,20 +221,21 @@ export default function HotelDetailsComponent() {
               type="datetime-local"
               variant="outlined"
               // defaultValue="2017-05-24T10:30"
-              className={classes.textField}
+              className={classes.date}
               InputLabelProps={{
                 shrink: true,
               }}
               onChange={handleChange}
               name="checkinDate"
             />
+            <br/>
             <TextField
               id="datetime-local"
               label="check-out date and time"
               type="datetime-local"
               variant="outlined"
               // defaultValue="2017-05-24T10:30"
-              className={classes.textField}
+              className={classes.date}
               InputLabelProps={{
                 shrink: true,
               }}

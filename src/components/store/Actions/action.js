@@ -20,9 +20,3 @@ export function StoreSelectedHotel(payload) {
         payload: payload
     }
 }
-export function StoreBookingDetails(payload) {
-    return {
-        type: STORE_BOOKING_DETAILS,
-        payload: payload
-    }
-}

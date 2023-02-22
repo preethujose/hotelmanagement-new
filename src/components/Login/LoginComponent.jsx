@@ -16,6 +16,7 @@ import {
   FormControl,
   Toolbar,
   Typography,
+  Container,
 } from "@material-ui/core";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { StoreUserDetails } from "../store/Actions/action";
@@ -33,7 +34,15 @@ const useStyles = makeStyles((theme) => ({
   },
   error:{
     color:'red'
+  },
+  h1:{
+    color:'#e916e9'
+  },
+  Paper:{
+    border:'2px solid #e916e9',
+    width:'80%'
   }
+
 }));
 const LoginPage = (props) => {
   const [userDetails, setUserDetails] = useState(null);
@@ -44,16 +53,6 @@ const LoginPage = (props) => {
 
   const handleChange = (event) => {
     setUserDetails(userDetails => ({ ...userDetails, [event.target.name]: event.target.value }));
-
-    // let details = {};
-    // if (event.target.name === "userName") {
-    //   if (event.target.value !== "") {
-    //     details = {
-    //       ...userDetails,
-    //       name: event.target.value,
-    //     };
-    //   }
-    // }
     if (event.target.name === "userType") {
       setUserType(event.target.value,)
       // details = {
@@ -92,13 +91,14 @@ const LoginPage = (props) => {
       props.history.push("/home/list");
     }
   }
-  console.log("userDetails", userDetails);
+  console.log('userDetails',userDetails)
   return (
     <div style={{ padding: 30 }}>
-      <Toolbar>
-        <Typography>Login</Typography>
-      </Toolbar>
-      <Paper>
+      <Grid>
+        <h1 data-testid='head' className={classes.h1}>Login</h1>
+      </Grid>
+      <Container fixed style={{display:'flex',justifyContent:'center'}}>
+      <Paper className={classes.Paper}>
         <Grid
           container
           spacing={3}
@@ -113,6 +113,7 @@ const LoginPage = (props) => {
               className={classes.textField}
               name="userName"
               onChange={handleChange}
+              data-testid='Username'
             ></TextField>
           </Grid>
           <Grid item xs={12}>
@@ -131,9 +132,10 @@ const LoginPage = (props) => {
                 name="userType"
                 //   value={age}
                 onChange={handleChange}
+                data-testid='userType'
               >
-                <MenuItem value="Admin">Admin</MenuItem>
-                <MenuItem value="User">User</MenuItem>
+                <MenuItem data-testid ='Admin' value="Admin">Admin</MenuItem>
+                <MenuItem  data-testid='role-user' value="User">User</MenuItem>
                 <MenuItem value="Hotel-Admin">Hotel-Admin</MenuItem>
               </Select>
             </FormControl>
@@ -155,13 +157,14 @@ const LoginPage = (props) => {
             {error ? <Typography className={classes.error}>{error}</Typography> : null}
          
           <Grid item xs={12}>
-            <Button color="primary" variant="contained" onClick={onClickLogin}>
+            <Button color="primary" data-testid='button' variant="contained" onClick={onClickLogin} style={{ marginBottom: '10px' }}>
               {" "}
               Login{" "}
             </Button>
           </Grid>
         </Grid>
       </Paper>
+      </Container>
     </div>
   );
 };

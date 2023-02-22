@@ -57,7 +57,7 @@ export default function HotelList() {
   const bookingDetails = JSON.parse(sessionStorage.getItem("bookingDetails"));
 
   useEffect(() => {
-    if (bookingDetails.length) {
+    if (bookingDetails && bookingDetails.length) {
       if (user?.code && user.userType==='Hotel-Admin') {
         let filteredList = bookingDetails.filter(
           (item) => item.hotelCode === user?.code
@@ -96,7 +96,7 @@ export default function HotelList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredList.map((row) => (
+            {filteredList && filteredList.map((row) => (
               <StyledTableRow key={row.name}>
                 <StyledTableCell component="th" scope="row">
                   {user.userType==='Hotel-Admin'?row.name:row.hotelName}

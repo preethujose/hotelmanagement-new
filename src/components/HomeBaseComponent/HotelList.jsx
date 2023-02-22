@@ -233,7 +233,7 @@ export default function HotelList() {
         // PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
       >
-        <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
+        <DialogTitle style={{ cursor: "move" ,backgroundColor:'#3f51b5',color:'white'}} id="draggable-dialog-title">
           ADD HOTELS
         </DialogTitle>
         <DialogContent className={classes.dialog}>
@@ -273,6 +273,7 @@ export default function HotelList() {
               variant="outlined"
               multiline
               name="address"
+              rows={2}
               onChange={onChangeData}
             />
             <br />
@@ -297,9 +298,11 @@ export default function HotelList() {
             <TextField
               className={classes.TextField}
               type="text"
+              multiline
               label="Description"
               variant="outlined"
               name="description"
+              rows={3}
               onChange={onChangeData}
             />
             <br />
