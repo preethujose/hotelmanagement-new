@@ -23,6 +23,7 @@ import { Link } from "react-router-dom";
 import { HotelData } from "../../Data/HotelData";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreHotelList, StoreSelectedHotel } from "../store/Actions/action";
+import { useAppDispatch, useAppSelector } from "../store/redux-hooks";
 
 const useStyles = makeStyles((theme) => ({
   TextField: {
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function HotelList() {
   const classes = useStyles();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [data, setData] = useState([]);
   const [location, setLocation] = useState("");
@@ -79,7 +80,7 @@ export default function HotelList() {
   const [toastData,setToastData]=useState('')
 
   const userType =JSON.parse(sessionStorage.getItem('userType'))
-  const hotelList = useSelector((state) => state.user.list);
+  const hotelList = useAppSelector((state) => state.user.list);
   console.log("hotelList", hotelList);
   const deleteStyle = {
     display: "flex",
@@ -152,7 +153,7 @@ export default function HotelList() {
   return (
     <Grid>
       <Grid>
-        <h1>Hotel List</h1>
+        <h1 data-testid='listhead'>HOTEL LIST</h1>
         {userType && userType.userType === "Admin" ? (
           <Button
             size="small"
@@ -172,11 +173,13 @@ export default function HotelList() {
         alignItems="center"
       >
         <TextField
+          type='text'
           className={classes.TextField}
-          label="Name"
+          label="Search by Name"
           onChange={handleSearch}
           value={searchedName}
-          name="code"
+          data-testid="search"
+
         ></TextField>
         <FormControl className={classes.formControl}>
           <InputLabel id="demo-simple-select-helper-label">

@@ -20,6 +20,7 @@ import {
 } from "@material-ui/core";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { StoreUserDetails } from "../store/Actions/action";
+import { useAppDispatch } from "../store/redux-hooks";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -49,7 +50,7 @@ const LoginPage = (props) => {
   const [error, setError] = useState("");
   const[userType,setUserType]=useState('')
   const classes = useStyles();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleChange = (event) => {
     setUserDetails(userDetails => ({ ...userDetails, [event.target.name]: event.target.value }));

@@ -8,6 +8,7 @@ import HotelList from './HotelList';
 import MenuComponent from './MenuComponent';
 import { HotelData } from '../../Data/HotelData';
 import { StoreHotelList } from '../store/Actions/action';
+import { useAppDispatch } from '../store/redux-hooks';
 
 const useStyles = makeStyles((theme) => ({
     navlinks: {
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 export default function HomeComponent() {
 
     // const user = useSelector((state) => state.user.userDetails)
-    const dispatch=useDispatch()
+    const dispatch=useAppDispatch()
 
     sessionStorage.setItem('hotelList',JSON.stringify(HotelData) )
     

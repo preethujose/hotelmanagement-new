@@ -15,7 +15,8 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector} from "react-redux";
+import { useAppDispatch, useAppSelector } from "../store/redux-hooks";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,17 +42,17 @@ const useStyles = makeStyles((theme) => ({
   dialog: {
     minWidth: "500px",
   },
-  h1:{
-    color:'#e916e9'
+  h1: {
+    color: "#e916e9",
   },
-  date:{
+  date: {
     margin: theme.spacing(1),
     minWidth: 200,
-  }
+  },
 }));
 
 export default function HotelDetailsComponent() {
-  const hotelInfo = useSelector((state) => state.user);
+  const hotelInfo = useAppSelector((state) => state.user);
   const classes = useStyles();
 
   const [selectedhotel, setSelectedHotel] = useState(null);
@@ -67,7 +68,7 @@ export default function HotelDetailsComponent() {
       ? JSON.parse(sessionStorage.getItem("bookingDetails"))
       : []
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const flexContainer = {
     display: "flex",
     flexDirection: "row",
@@ -87,14 +88,13 @@ export default function HotelDetailsComponent() {
       let date2 = bookingData.checkoutDate.split("T")[0];
       let days = getNumberOfDays(date1, date2);
       setDays(days);
-     
     }
   }, [bookingData]);
 
-  useEffect(()=>{
-    let total = days * selectedhotel?.amount*bookingData.number;
+  useEffect(() => {
+    let total = days * selectedhotel?.amount * bookingData.number;
     setTotalAmt(total);
-  },[days,bookingData])
+  }, [days, bookingData]);
 
   function handleChange(event) {
     setBookingData((bookingData) => ({
@@ -119,7 +119,6 @@ export default function HotelDetailsComponent() {
     return diffInDays;
   }
 
-
   function onClickBook() {
     setShowDialog(true);
   }
@@ -130,7 +129,7 @@ export default function HotelDetailsComponent() {
       ["hotelCode"]: selectedhotel.code,
       ["hotelName"]: selectedhotel.name,
       ["userName"]: user.userName,
-      ['total']:totalAmt
+      ["total"]: totalAmt,
     };
     let bookingList = [...list];
     bookingList.push(bookedData);
@@ -161,16 +160,18 @@ export default function HotelDetailsComponent() {
             />
           </CardContent>
           {/* </CardActionArea> */}
-          <CardActions style={{display:'flex',justifyContent:'center'}}>
-            <Button
-              size="small"
-              color="primary"
-              variant="contained"
-              onClick={onClickBook}
-            >
-              Book Now
-            </Button>
-          </CardActions>
+          {user.userType === "User" ? (
+            <CardActions style={{ display: "flex", justifyContent: "center" }}>
+              <Button
+                size="small"
+                color="primary"
+                variant="contained"
+                onClick={onClickBook}
+              >
+                Book Now
+              </Button>
+            </CardActions>
+          ) : null}
         </Card>
       </Grid>
       <Dialog
@@ -178,7 +179,9 @@ export default function HotelDetailsComponent() {
         open={showDialog}
         aria-labelledby="draggable-dialog-title"
       >
-        <DialogTitle style={{ cursor: "move" ,backgroundColor:'#3f51b5',color:'white'}} >
+        <DialogTitle
+          style={{ cursor: "move", backgroundColor: "#3f51b5", color: "white" }}
+        >
           Booking Details
         </DialogTitle>
         <DialogContent className={classes.dialog}>
@@ -228,7 +231,7 @@ export default function HotelDetailsComponent() {
               onChange={handleChange}
               name="checkinDate"
             />
-            <br/>
+            <br />
             <TextField
               id="datetime-local"
               label="check-out date and time"

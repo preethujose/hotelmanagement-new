@@ -32,10 +32,10 @@ export default function MenuComponent() {
         Hotel Management
       </Typography>
         <div className={classes.navlinks}>
-          <Link to="/home/list" className={classes.link}>
+          <Link to="/home/list" data-testid='menulist' className={classes.link}>
             Hotel List
           </Link>
-          <Link to="/home/bookingdetails" className={classes.link}>
+          <Link to="/home/bookingdetails" data-testid='menubooking' className={classes.link}>
             Booking Details
           </Link>
           {/* <Link to="/contact" className={classes.link}>
