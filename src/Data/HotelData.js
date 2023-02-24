@@ -5,7 +5,8 @@ export const HotelData=[{
     'address':'Attukad Waterfall Road, Pallivasal, Kozhikode, India, 685612 ',
     'contact':'000-000-000',
     // 'facilities':['Room service','Breakfast','Free parking','AC/Non AC','Family rooms'],
-    'amount':'1500'
+    'amount':'1500',
+    'description':'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica'
 },
 {
     'code':'002',
@@ -14,7 +15,9 @@ export const HotelData=[{
     'Location':'Munnar',
     'contact':'1111-222-333',
     // 'facilities':['Room service','Breakfast','Free parking','AC/Non AC','Family rooms'],
-    'amount':'1450'
+    'amount':'1450',
+    'description':'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica'
+
 
 
 },{
@@ -24,7 +27,9 @@ export const HotelData=[{
     'Location':'Thrissur',
     'contact':'1111-222-333',
     // 'facilities':['Room service','Breakfast','Free parking','AC/Non AC','Family rooms'],
-    'amount':'1650'
+    'amount':'1650',
+    'description':'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica'
+
 
 
 },
@@ -35,7 +40,9 @@ export const HotelData=[{
     'Location':'Kochi',
     'contact':'1111-222-333',
     // 'facilities':['Room service','Breakfast','Free parking','AC/Non AC','Family rooms'],
-    'amount':'1500'
+    'amount':'1500',
+    'description':'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica'
+
 
 
 },
@@ -46,7 +53,9 @@ export const HotelData=[{
     'address':'Meencut, Chittirapuram P.O, Chekuthan Mukku, Munnar, India, 685565',
     'contact':'1111-222-333',
     // 'facilities':['Room service','Breakfast','Free parking','AC/Non AC','Family rooms'],
-    'amount':'1350'
+    'amount':'1350',
+    'description':'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica'
+
 
 
 },
@@ -57,7 +66,9 @@ export const HotelData=[{
     'address':'Meencut, Chittirapuram P.O, Chekuthan Mukku, Munnar, India, 685565',
     'contact':'1111-222-333',
     // 'facilities':['Room service','Breakfast','Free parking','AC/Non AC','Family rooms'],
-    'amount':'1550'
+    'amount':'1550',
+    'description':'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica'
+
 
 
 },
@@ -68,7 +79,9 @@ export const HotelData=[{
     'address':'Meencut, Chittirapuram P.O, Chekuthan Mukku, Munnar, India, 685565',
     'contact':'1111-222-333',
     // 'facilities':['Room service','Breakfast','Free parking','AC/Non AC','Family rooms'],
-    'amount':'1200'
+    'amount':'1200',
+    'description':'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica'
+
 
 
 },
@@ -79,7 +92,9 @@ export const HotelData=[{
     'address':'Meencut, Chittirapuram P.O, Chekuthan Mukku, Munnar, India, 685565',
     'contact':'1111-222-333',
     // 'facilities':['Room service','Breakfast','Free parking','AC/Non AC','Family rooms'],
-    'amount':'1350'
+    'amount':'1350',
+    'description':'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica'
+
 
 
 }

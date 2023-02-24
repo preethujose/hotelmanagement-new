@@ -15,13 +15,13 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../store/redux-hooks";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "600px",
-    border: "1px solid #ee82ea",
+    border: "3px solid #ee82ea",
     background: "#ebefef",
   },
   head: {
@@ -68,6 +68,7 @@ export default function HotelDetailsComponent() {
       ? JSON.parse(sessionStorage.getItem("bookingDetails"))
       : []
   );
+  const [errorBooking, setErrorBooking] = useState({});
   const dispatch = useAppDispatch();
   const flexContainer = {
     display: "flex",
@@ -78,6 +79,7 @@ export default function HotelDetailsComponent() {
 
   useEffect(() => {
     let list = hotelInfo.list;
+    console.log("list", list);
     let filteredList = list.filter((item) => item.code === hotelInfo.hotelId);
     setSelectedHotel(filteredList[0]);
   }, [hotelInfo]);
@@ -115,6 +117,7 @@ export default function HotelDetailsComponent() {
 
     // Calculating the no. of days between two dates
     const diffInDays = Math.round(diffInTime / oneDay);
+    console.log("diffInDays", diffInDays);
 
     return diffInDays;
   }
@@ -124,19 +127,55 @@ export default function HotelDetailsComponent() {
   }
 
   function onSubmitBooking() {
-    let bookedData = {
-      ...bookingData,
-      ["hotelCode"]: selectedhotel.code,
-      ["hotelName"]: selectedhotel.name,
-      ["userName"]: user.userName,
-      ["total"]: totalAmt,
-    };
-    let bookingList = [...list];
-    bookingList.push(bookedData);
-    sessionStorage.setItem("bookingDetails", JSON.stringify(bookingList));
-    setToastmsg("Booking completed successfully");
-    setShowToast(true);
-    setShowDialog(false);
+    let err = {};
+    let invalid = false;
+    if (!bookingData.name) {
+      err.name = "Please fill this field";
+      console.log("err", err);
+      setErrorBooking(err);
+      invalid = true;
+    }
+    if (!bookingData.address) {
+      err.address = "Please fill this field";
+      console.log("err", err);
+      setErrorBooking(err);
+      invalid = true;
+    }
+    if (!bookingData.number) {
+      err.number = "Please fill this field";
+      console.log("err", err);
+      setErrorBooking(err);
+      invalid = true;
+    }
+    if (!bookingData.checkinDate) {
+      err.checkinDate = "Please fill this field";
+      console.log("err", err);
+      setErrorBooking(err);
+      invalid = true;
+    }
+    if (!bookingData.checkoutDate) {
+      err.checkoutDate = "Please fill this field";
+      console.log("err", err);
+      setErrorBooking(err);
+      invalid = true;
+    }
+
+    if (!invalid) {
+      console.log('invalid',invalid)
+      let bookedData = {
+        ...bookingData,
+        ["hotelCode"]: selectedhotel.code,
+        ["hotelName"]: selectedhotel.name,
+        ["userName"]: user.userName,
+        ["total"]: totalAmt,
+      };
+      let bookingList = [...list];
+      bookingList.push(bookedData);
+      sessionStorage.setItem("bookingDetails", JSON.stringify(bookingList));
+      setToastmsg("Booking completed successfully");
+      setShowToast(true);
+      setShowDialog(false);
+    }
   }
   return (
     <Grid direction="column" justifyContent="center" alignItems="center">
@@ -147,13 +186,22 @@ export default function HotelDetailsComponent() {
             <Typography gutterBottom className={classes.head}>
               {selectedhotel?.name}
             </Typography>
-            <Typography>{selectedhotel?.address}</Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Lizards are a widespread group of squamate reptiles, with over
-              6,000 species, ranging across all continents except Antarctica
+            <Typography style={{ padding: "10px" }}>
+              {selectedhotel?.address}
             </Typography>
-            <Typography variant="h6">Phone:{selectedhotel?.contact}</Typography>
+            <Typography
+              style={{ padding: "10px", wordBreak: "break-word" }}
+              variant="body2"
+              color="textSecondary"
+              component="p"
+            >
+              {selectedhotel?.description}
+            </Typography>
+            <Typography style={{ padding: "5px" }} variant="h6">
+              Phone:{selectedhotel?.contact}
+            </Typography>
             <Chip
+              style={{ padding: "10px" }}
               className={classes.chip}
               label={`${selectedhotel?.amount}/day`}
               size="large"
@@ -194,6 +242,8 @@ export default function HotelDetailsComponent() {
               variant="outlined"
               onChange={handleChange}
               name="name"
+              error={errorBooking && errorBooking.name}
+              helperText={errorBooking.name ? errorBooking.name : null}
             />
             <br />
 
@@ -206,6 +256,8 @@ export default function HotelDetailsComponent() {
               name="address"
               rows={2}
               onChange={handleChange}
+              error={errorBooking && errorBooking.address}
+              helperText={errorBooking.address ? errorBooking.address : null}
             />
             <br />
 
@@ -216,6 +268,8 @@ export default function HotelDetailsComponent() {
               variant="outlined"
               name="number"
               onChange={handleChange}
+              error={errorBooking && errorBooking.number}
+              helperText={errorBooking.number ? errorBooking.number : null}
             />
             <br />
             <TextField
@@ -230,6 +284,10 @@ export default function HotelDetailsComponent() {
               }}
               onChange={handleChange}
               name="checkinDate"
+              error={errorBooking && errorBooking.checkinDate}
+              helperText={
+                errorBooking.checkinDate ? errorBooking.checkinDate : null
+              }
             />
             <br />
             <TextField
@@ -244,6 +302,10 @@ export default function HotelDetailsComponent() {
               }}
               onChange={handleChange}
               name="checkoutDate"
+              error={errorBooking && errorBooking.checkoutDate}
+              helperText={
+                errorBooking.checkoutDate ? errorBooking.checkoutDate : null
+              }
             />
             <br />
             {days ? (
@@ -254,12 +316,12 @@ export default function HotelDetailsComponent() {
                 // variant="outlined"
                 name="days"
                 disabled
-                value="2"
+                value={days}
                 onChange={handleChange}
               />
             ) : null}
 
-            <Typography>Total Amount</Typography>
+            <Typography variant="h6">Total Amount</Typography>
             {totalAmt ? (
               <Chip
                 className={classes.chip}
@@ -272,8 +334,9 @@ export default function HotelDetailsComponent() {
         <DialogActions>
           <Button
             autoFocus
-            onClick={() => setShowDialog(!showDialog)}
-            color="primary"
+            onClick={() => {setShowDialog(!showDialog); setErrorBooking({})}}
+            variant="contained"
+            color="secondary"
           >
             Cancel
           </Button>

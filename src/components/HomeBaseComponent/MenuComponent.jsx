@@ -38,12 +38,6 @@ export default function MenuComponent() {
           <Link to="/home/bookingdetails" data-testid='menubooking' className={classes.link}>
             Booking Details
           </Link>
-          {/* <Link to="/contact" className={classes.link}>
-            Contact
-          </Link>
-          <Link to="/faq" className={classes.link}>
-            FAQ
-          </Link> */}
         </div>
     </Toolbar>
   </AppBar>

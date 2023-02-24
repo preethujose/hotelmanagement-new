@@ -16,9 +16,10 @@ import {
   Select,
   Snackbar,
   TextField,
+  Typography,
 } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { HotelData } from "../../Data/HotelData";
 import { useDispatch, useSelector } from "react-redux";
@@ -54,16 +55,20 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
   },
   dialog: {
-    minHeight: "500px",
+    // minHeight: "500px",
     minWidth: "500px",
   },
 }));
 
 export default function HotelList() {
+
+  const hotelList = sessionStorage.getItem("hotelList")
+  ? JSON.parse(sessionStorage.getItem("hotelList"))
+  : HotelData;
   const classes = useStyles();
   const dispatch = useAppDispatch();
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(hotelList);
   const [location, setLocation] = useState("");
   const locationList = [
     "Kozhikode",
@@ -77,59 +82,69 @@ export default function HotelList() {
   const [openDialog, setOpenDialog] = useState(false);
   const [newData, setNewData] = useState({});
   const [isAdded, setIsAdded] = useState(false);
-  const [toastData,setToastData]=useState('')
+  const [toastData, setToastData] = useState("");
+  const [showConfirm, setShowConfirm] = useState(false);
+  const selectedIndex = useRef(null);
+  const userType = JSON.parse(sessionStorage.getItem("userType"));
+  // const hotelList = useAppSelector((state) => state.user.list);
+  // sessionStorage.setItem('hotelList',JSON.stringify(HotelData) )
 
-  const userType =JSON.parse(sessionStorage.getItem('userType'))
-  const hotelList = useAppSelector((state) => state.user.list);
-  console.log("hotelList", hotelList);
   const deleteStyle = {
     display: "flex",
     justifyContent: "flex-end",
   };
+  dispatch(StoreHotelList(hotelList));
 
-  useEffect(() => {
-    setData(hotelList);
-  }, [hotelList]);
+  
+  // useEffect(() => {
+  //  if(hotelList.length)
+  //   console.log("hotelList", hotelList);
+  //   setData(hotelList);
+  // }, []);
 
   function handleChange(event) {
     setLocation(event.target.value);
     filterLocation(event.target.value);
   }
   function filterLocation(location) {
-    console.log("location", location);
-    if (!location) setData(HotelData);
+    if (!location) setData(hotelList);
     else {
-      let filteredList = HotelData.filter((item) => {
-        return item.Location === location;
+      console.log('hotelList',hotelList)
+      let filteredList = hotelList.filter((item) => {
+        return item.Location.toLowerCase() === location.toLowerCase();
       });
+    console.log('filteredList',filteredList)
+
       setData(filteredList);
-      console.log("filteredList", filteredList);
     }
   }
   function handleSearch(event) {
     setSearchedName(event.target.value);
-    console.log("filteredList handleSearch ", event.target.value);
     let query = event.target.value;
-    let filteredList = HotelData.filter((item) => {
+    let filteredList = hotelList.filter((item) => {
       return item.name.toLowerCase().indexOf(query.toLowerCase()) !== -1;
     });
-    console.log("filteredList", filteredList);
     // Trigger render with updated values
     setData(filteredList);
   }
 
   function onClickHotel(id) {
-    console.log("hotelId", id);
+    console.log("onClickHotel", id);
     dispatch(StoreSelectedHotel(id));
   }
-  function onClickDelete(index) {
+  function confirmDelete() {
     let hotelList = [...data];
-    hotelList.splice(index, 1);
-    console.log("hotelList", hotelList);
+    hotelList.splice(selectedIndex.current, 1);
     setData(hotelList);
+    sessionStorage.setItem("hotelList", JSON.stringify(hotelList));
+
     dispatch(StoreHotelList(hotelList));
     setIsAdded(true);
-    setToastData('Deleted successfully')
+    setToastData("Deleted successfully");
+  }
+  function onClickDelete(index) {
+    setShowConfirm(true);
+    selectedIndex.current = index;
   }
 
   function onChangeData(event) {
@@ -142,18 +157,19 @@ export default function HotelList() {
   function onClickAdd() {
     let listHotel = [...data];
     listHotel.push(newData);
-    console.log("listHotel", listHotel);
     dispatch(StoreHotelList(listHotel));
+    sessionStorage.setItem("hotelList", JSON.stringify(listHotel));
     setIsAdded(true);
-    setToastData('Added successfully')
+    setToastData("Added successfully");
 
-    setOpenDialog(false)
+    setOpenDialog(false);
   }
-  console.log("newData", newData);
+  // sessionStorage.setItem('hotelList',JSON.stringify(HotelData) )
+
   return (
     <Grid>
       <Grid>
-        <h1 data-testid='listhead'>HOTEL LIST</h1>
+        <h1 data-testid="listhead">HOTEL LIST</h1>
         {userType && userType.userType === "Admin" ? (
           <Button
             size="small"
@@ -173,13 +189,12 @@ export default function HotelList() {
         alignItems="center"
       >
         <TextField
-          type='text'
+          type="text"
           className={classes.TextField}
           label="Search by Name"
           onChange={handleSearch}
           value={searchedName}
           data-testid="search"
-
         ></TextField>
         <FormControl className={classes.formControl}>
           <InputLabel id="demo-simple-select-helper-label">
@@ -202,7 +217,7 @@ export default function HotelList() {
       </Grid>
       <Box>
         <List className={classes.root}>
-          {data.length &&
+          {data.length ?
             data.map((item, index) => {
               return (
                 <ListItem button onClick={() => onClickHotel(item.code)}>
@@ -220,13 +235,18 @@ export default function HotelList() {
                         <Delete
                           color="secondary"
                           onClick={() => onClickDelete(index)}
+                          // onClick={()=>setShowConfirm(true)}
                         />
                       </ListItemText>
                     </ListItem>
                   ) : null}
                 </ListItem>
-              );
-            })}
+              )
+             
+            })
+            :
+            <Typography variant="h6" style={{padding:'20px',color:'red'}}>No data Found</Typography>
+          }
         </List>
       </Box>
       <Dialog
@@ -236,7 +256,10 @@ export default function HotelList() {
         // PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
       >
-        <DialogTitle style={{ cursor: "move" ,backgroundColor:'#3f51b5',color:'white'}} id="draggable-dialog-title">
+        <DialogTitle
+          style={{ cursor: "move", backgroundColor: "#3f51b5", color: "white" }}
+          id="draggable-dialog-title"
+        >
           ADD HOTELS
         </DialogTitle>
         <DialogContent className={classes.dialog}>
@@ -319,7 +342,8 @@ export default function HotelList() {
           <Button
             autoFocus
             onClick={() => setOpenDialog(!openDialog)}
-            color="primary"
+            color="secondary"
+            variant="contained"
           >
             Cancel
           </Button>
@@ -328,14 +352,41 @@ export default function HotelList() {
           </Button>
         </DialogActions>
       </Dialog>
-    
+
       <Snackbar
         severity="success"
         open={isAdded}
-        onClose={()=>setIsAdded(false)}
+        onClose={() => setIsAdded(false)}
         message={toastData}
         autoHideDuration={1000}
       />
+      <Dialog
+        open={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        aria-labelledby="confirm-dialog"
+      >
+        <DialogTitle id="confirm-dialog">Confirm the action</DialogTitle>
+        <DialogContent>Do you really wants to delete the data</DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            onClick={() => setShowConfirm(false)}
+            color="secondary"
+          >
+            No
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setShowConfirm(false);
+              confirmDelete();
+            }}
+            color="primary"
+          >
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Grid>
   );
 }

@@ -15,7 +15,7 @@ sessionStorage.setItem("userType", JSON.stringify({
 
 
 
-describe('testing home page', () => {
+describe('testing Hotel page', () => {
     const dispatch=jest.fn()
 
     beforeEach(()=>{

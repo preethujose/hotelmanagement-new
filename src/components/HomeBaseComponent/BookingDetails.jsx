@@ -30,17 +30,6 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
 
 const useStyles = makeStyles({
   table: {
@@ -53,7 +42,6 @@ export default function HotelList() {
   const user = JSON.parse(sessionStorage.getItem("userType"));
   const [filteredList,setFilteredList]=useState([])
 
-  console.log("code", user?.code);
   const bookingDetails = JSON.parse(sessionStorage.getItem("bookingDetails"));
 
   useEffect(() => {
@@ -62,7 +50,6 @@ export default function HotelList() {
         let filteredList = bookingDetails.filter(
           (item) => item.hotelCode === user?.code
         );
-        console.log("filteredList", filteredList);
         setFilteredList(filteredList)
       }
       else if(user.userType==='User'){
@@ -75,8 +62,7 @@ export default function HotelList() {
       setFilteredList(bookingDetails)
 
     }
-  }, [bookingDetails]);
-  console.log("bookingDetails", bookingDetails);
+  }, [bookingDetails, user?.code, user?.userName, user.userType]);
   return (
     <Grid>
       <div className="hotel">

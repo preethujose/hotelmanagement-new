@@ -1,17 +1,13 @@
 import { STORE_BOOKING_DETAILS, STORE_HOTEL_LIST, STORE_SELECTED_HOTEL, STORE_USER_DETAILS} from '../Actions/action'
 
 const intialState = {
-   userDetails:null,
    hotelId:null,
    list:[],
    bookinglist:[]
 }
 
 const user = (state = intialState, action) => {
-    if (action.type === STORE_USER_DETAILS) {
-        return Object.assign({}, state, { userDetails: action.payload });
-    }
-    else if (action.type === STORE_SELECTED_HOTEL) {
+    if (action.type === STORE_SELECTED_HOTEL) {
         return Object.assign({}, state, { hotelId: action.payload });
     }
     else if (action.type === STORE_HOTEL_LIST) {
